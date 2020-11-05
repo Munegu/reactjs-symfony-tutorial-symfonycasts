@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import RepLogList from "./RepLogList";
 
 export default class RepLogApp extends Component{
     constructor(props) {
@@ -25,12 +26,6 @@ export default class RepLogApp extends Component{
             emoji = <span> 😱 </span>;
         }
 
-            const repLogs = [
-                { id: 1, reps: 25, itemLabel: 'My Laptop', totalWeightLifted: 112.5 },
-                { id: 2, reps: 10, itemLabel: 'Big Fat Cat', totalWeightLifted: 180 },
-                { id: 8, reps: 4, itemLabel: 'Big Fat Cat', totalWeightLifted: 72 }
-            ];
-
         return (
             <div className="col-md-7">
                 <h2>Lift History ! {emoji}</h2>
@@ -44,21 +39,7 @@ export default class RepLogApp extends Component{
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {repLogs.map((repLog) => (
-                            <tr
-                                key={repLog.id}
-                                className={highlightedRowId === repLog.id ? 'info' : '' }
-                                onClick={(event) => this.handleRowClick(repLog.id, event)}
-                            >
-                                <td>{repLog.itemLabel}</td>
-                                <td>{repLog.reps}</td>
-                                <td>{repLog.totalWeightLifted}</td>
-                                <td>...</td>
-                            </tr>
-                        )
-                    )}
-                    </tbody>
+                    <RepLogList highlightedRowId={highlightedRowId}/>
                     <tfoot>
                     <tr>
                         <td>&nbsp;</td>
