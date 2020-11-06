@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export default class RepLogList extends Component {
+export default function  RepLogList(props) {
 
-    render(){
-        const { highlightedRowId } = this.props;
+        const { highlightedRowId, onRowClick } = props;
 
         const repLogs = [
             { id: 1, reps: 25, itemLabel: 'My Laptop', totalWeightLifted: 112.5 },
@@ -17,7 +17,7 @@ export default class RepLogList extends Component {
                     <tr
                         key={repLog.id}
                         className={highlightedRowId === repLog.id ? 'info' : '' }
-                        onClick={(event) => this.handleRowClick(repLog.id, event)}
+                        onClick={() => onRowClick(repLog.id)}
                     >
                         <td>{repLog.itemLabel}</td>
                         <td>{repLog.reps}</td>
@@ -30,4 +30,8 @@ export default class RepLogList extends Component {
         )
     }
 
-}
+
+RepLogList.propTypes = {
+    highlightedRowId: PropTypes.any,
+    onRowClick: PropTypes.func.isRequired,
+};
