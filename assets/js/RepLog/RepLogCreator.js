@@ -8,6 +8,7 @@ export default class RepLogCreator extends Component{
         this.quantityInput = React.createRef();
         this.itemSelect = React.createRef();
 
+
         this.itemOptions = [
             { id: 'cat', text: 'Cat' },
             { id: 'fat_cat', text: 'Big Fat Cat' },
@@ -24,6 +25,13 @@ export default class RepLogCreator extends Component{
         const {onAddRepLog } = this.props;
         const quantityInput = this.quantityInput.current;
         const itemSelect = this.itemSelect.current;
+
+        if (quantityInput.value <= 0){
+            // TODO print some validation error message
+
+            // don't submit or clear the form
+            return ;
+        }
 
         onAddRepLog(itemSelect.options[itemSelect.selectedIndex].text,
             quantityInput.value);
