@@ -29,7 +29,8 @@ export default function RepLogs(props) {
         onDeleteRepLog,
         isLoaded,
         isSavingNewRepLog,
-        successMessage
+        successMessage,
+        newRepLogValidationErrorMessage
     } = props;
 
     let emoji = '';
@@ -85,6 +86,7 @@ export default function RepLogs(props) {
                 <div className="col-md-6">
                     <RepLogCreator
                         onAddRepLog={onAddRepLog}
+                        validationErrorMessage={newRepLogValidationErrorMessage}
                     />
                 </div>
             </div>
@@ -104,5 +106,6 @@ RepLogs.propTypes = {
     numberOfHearts: PropTypes.number.isRequired,
     isLoaded: PropTypes.bool.isRequired,
     isSavingNewRepLog: PropTypes.bool.isRequired,
-    successMessage: PropTypes.string.isRequired
+    successMessage: PropTypes.string.isRequired,
+    newRepLogValidationErrorMessage: PropTypes.string.isRequired
 }

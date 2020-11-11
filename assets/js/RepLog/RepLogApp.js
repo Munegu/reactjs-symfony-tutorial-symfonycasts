@@ -14,8 +14,11 @@ export default class RepLogApp extends Component{
             numberOfHearts: 1,
             isLoaded: false,
             isSavingNewRepLog: false,
-            successMessage: ''
+            successMessage: '',
+            newRepLogValidationErrorMessage: '',
         }
+
+        this.successsMessageTimeoutHandle = 0;
 
         this.handleRowClick = this.handleRowClick.bind(this);
         this.handleAddRepLog = this.handleAddRepLog.bind(this);
@@ -33,6 +36,10 @@ export default class RepLogApp extends Component{
             });
     }
 
+    componentWillUnmount() {
+        clearTimeout(this.successsMessageTimeoutHandle);
+    }
+
 
     handleRowClick (reLogId) {
         this.setState({highlightedRowId: reLogId});
@@ -46,7 +53,11 @@ export default class RepLogApp extends Component{
 
        this.setState({
            isSavingNewRepLog: true
-       })
+       });
+
+        const newState = {
+            isSavingNewRepLog: false,
+        };
 
        createRepLog(newRep)
            .then(repLog => {
@@ -54,12 +65,39 @@ export default class RepLogApp extends Component{
                     const newRepLogs = [...prevState.repLogs, repLog];
 
                     return {
+                        ...newState,
                         repLogs: newRepLogs,
-                        isSavingNewRepLog: false,
-                        successMessage: 'Rep Log Saved!'
+                        newRepLogValidationErrorMessage: ''
                     };
-                })
+                });
+                this.setSuccessMessage('Rep Log Saved');
+           })
+           .catch(error => {
+               error.response.json()
+                   .then(errorData => {
+                       const errors = errorData.errors;
+                       const firstError = errors[Object.keys(errors)[0]];
+
+                       this.setState({
+                           ...newState,
+                           newRepLogValidationErrorMessage: firstError
+                       });
+                   });
            });
+    }
+
+    setSuccessMessage(message){
+        this.setState({
+            successMessage: message
+        })
+
+        clearTimeout(this.successsMessageTimeoutHandle);
+        this.successsMessageTimeoutHandle = setTimeout(() =>{
+            this.setState({
+                successMessage: ''
+            });
+            this.successsMessageTimeoutHandle = 0;
+        }, 3000)
     }
 
     handleHeartChange(heartCount){
@@ -69,15 +107,29 @@ export default class RepLogApp extends Component{
     }
 
     handleDeleteRepLog(id){
-        deleteReplog(id);
-
-        // remove the repo log without mutating state
-        // filter returns a new array
         this.setState((prevState) => {
             return {
-                repLogs: prevState.repLogs.filter(repLog => repLog.id !== id)
+                repLogs: prevState.repLogs.map(repLog => {
+                    if (repLog.id !== id){
+                        return repLog;
+                    }
+                    return {...repLog, isDeleting: true};
+                })
             }
         });
+
+        deleteReplog(id)
+            .then(() => {
+                // remove the repo log without mutating state
+                // filter returns a new array
+                this.setState((prevState) => {
+                    return {
+                        repLogs: prevState.repLogs.filter(repLog => repLog.id !== id)
+                    }
+                });
+                this.setSuccessMessage('Item was Un-lifted!');
+            })
+        ;
     }
 
     render() {
