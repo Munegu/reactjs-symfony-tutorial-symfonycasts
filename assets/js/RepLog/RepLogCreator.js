@@ -39,7 +39,7 @@ export default class RepLogCreator extends Component{
             return ;
         }
 
-        onAddRepLog(itemSelect.options[itemSelect.selectedIndex].text,
+        onAddRepLog(itemSelect.options[itemSelect.selectedIndex].value,
             quantityInput.value);
 
         quantityInput.value = '';

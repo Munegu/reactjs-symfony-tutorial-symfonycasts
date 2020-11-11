@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import RepLogs from "./RepLogs";
 import PropTypes from 'prop-types';
 import {v4 as uuid } from 'uuid';
-import { getRepLogs, deleteReplog } from "../api/rep_log_api";
+import { getRepLogs, deleteReplog, createRepLog } from "../api/rep_log_api";
 
 export default class RepLogApp extends Component{
     constructor(props) {
@@ -12,7 +12,9 @@ export default class RepLogApp extends Component{
             highlightedRowId: null,
             repLogs: [],
             numberOfHearts: 1,
-            isLoaded: false
+            isLoaded: false,
+            isSavingNewRepLog: false,
+            successMessage: ''
         }
 
         this.handleRowClick = this.handleRowClick.bind(this);
@@ -36,19 +38,28 @@ export default class RepLogApp extends Component{
         this.setState({highlightedRowId: reLogId});
     }
 
-    handleAddRepLog(itemLabel, reps) {
+    handleAddRepLog(item, reps) {
        const newRep = {
-           id: uuid(),
            reps: reps,
-           itemLabel: itemLabel,
-           totalWeightLifted: Math.floor(Math.random() * 50)
-       }
+           item: item,
+       };
 
-       this.setState(prevState => {
-           const newRepLogs = [...prevState.repLogs, newRep]
-           return {repLogs: newRepLogs}
-       });
+       this.setState({
+           isSavingNewRepLog: true
+       })
 
+       createRepLog(newRep)
+           .then(repLog => {
+                this.setState(prevState => {
+                    const newRepLogs = [...prevState.repLogs, repLog];
+
+                    return {
+                        repLogs: newRepLogs,
+                        isSavingNewRepLog: false,
+                        successMessage: 'Rep Log Saved!'
+                    };
+                })
+           });
     }
 
     handleHeartChange(heartCount){
