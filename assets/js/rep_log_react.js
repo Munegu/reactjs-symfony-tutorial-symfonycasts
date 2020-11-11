@@ -3,7 +3,10 @@ import { render } from 'react-dom';
 import RepLogApp from "./RepLog/RepLogApp";
 
 
-const shouldShowEmoji = true;
+const shouldShowEmoji = false;
 
-render(<RepLogApp withHeart={shouldShowEmoji}/>,
+render(<RepLogApp
+        withHeart={shouldShowEmoji}
+        {...window.REP_LOG_APP_PROPS}
+    />,
     document.getElementById('lift-stuff-app'));

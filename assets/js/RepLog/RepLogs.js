@@ -30,7 +30,8 @@ export default function RepLogs(props) {
         isLoaded,
         isSavingNewRepLog,
         successMessage,
-        newRepLogValidationErrorMessage
+        newRepLogValidationErrorMessage,
+        itemOptions
     } = props;
 
     let emoji = '';
@@ -39,7 +40,7 @@ export default function RepLogs(props) {
     }
 
     return (
-        <div className="col-md-7">
+        <div>
             <h2>Lift History ! {emoji}</h2>
 
             <input type="range"
@@ -87,6 +88,7 @@ export default function RepLogs(props) {
                     <RepLogCreator
                         onAddRepLog={onAddRepLog}
                         validationErrorMessage={newRepLogValidationErrorMessage}
+                        itemOptions={itemOptions}
                     />
                 </div>
             </div>
@@ -107,5 +109,6 @@ RepLogs.propTypes = {
     isLoaded: PropTypes.bool.isRequired,
     isSavingNewRepLog: PropTypes.bool.isRequired,
     successMessage: PropTypes.string.isRequired,
-    newRepLogValidationErrorMessage: PropTypes.string.isRequired
+    newRepLogValidationErrorMessage: PropTypes.string.isRequired,
+    itemOptions: PropTypes.array.isRequired
 }
